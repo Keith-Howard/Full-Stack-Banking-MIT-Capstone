@@ -3,6 +3,7 @@ const Link        = ReactRouterDOM.Link;
 const HashRouter  = ReactRouterDOM.HashRouter;
 function Spa() {
   return (
+    <UserContext.Provider value={{users:[{name:'a',email:'b',password:'c',balance:100}]}}>
     <HashRouter>
       <div>
       <NavBar/>        
@@ -18,12 +19,11 @@ function Spa() {
           </div>
       </div>
     </HashRouter>
+  </UserContext.Provider>
   );
 }
 
 ReactDOM.render(
-  <UserContext.Provider value={{users:[{name:'a',email:'b',password:'c',balance:100}]}}>
-  <Spa/>
-  </UserContext.Provider>,
+  <Spa/>,
   document.getElementById('root')
 );

@@ -23,6 +23,7 @@ function Logout() {
             var res = await fetch('/account/logout');
             var data = await res.json();
             if (data.error === '') {
+              loginIndexCtx.name = '';
               loginIndexCtx.email = '';
               loginIndexCtx.password = '';
               loginIndexCtx.balance = 0;
@@ -36,6 +37,8 @@ function Logout() {
               allData.style.visibility = 'hidden';
               const logout = document.getElementById("logout");
               logout.style.visibility = 'hidden';
+              const userName = document.getElementById("userName");
+              userName.style.visibility = 'hidden';
               const createAccount = document.getElementById("createAccount");
               createAccount.style.visibility = 'visible';
               const login = document.getElementById("login");

@@ -1,5 +1,6 @@
 function NavBar(){
   const loginIndexCtx = React.useContext(LoginUserContext);
+  console.log('navbar name variable ' + loginIndexCtx.name)
     return(
   
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,7 +30,12 @@ function NavBar(){
               </li>
               <li className="nav-item">
                 <a id="logout" className="nav-link" style={{visibility: 'hidden'}} href="#/logout/">Log Out</a>
-              </li>       
+              </li>
+          </ul>
+          <ul className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <a id="userName" className="nav-link" style={{visibility: 'hidden'}}></a>
+            </li> 
           </ul>
         </div>
       </nav>

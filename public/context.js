@@ -1,5 +1,5 @@
 const UserContext = React.createContext(null);
-const LoginUserContext = React.createContext({email:'', password:'',balance:0, userToken: ''});
+const LoginUserContext = React.createContext({name: '', email:'', password:'', balance:0, userToken: ''});
  
 function Card(props){
     function classes(){

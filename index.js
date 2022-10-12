@@ -8,13 +8,13 @@ app.use(express.static('public'));
 app.use(cors());
 
 const firebaseConfig = {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyBABX_sKI35BiJ-rTQMRwnsgI3iOg-gtWk",
+    authDomain: "courso-bf828.firebaseapp.com",
+    databaseURL: "https://courso-bf828-default-rtdb.firebaseio.com",
+    projectId: "courso-bf828",
+    storageBucket: "courso-bf828.appspot.com",
+    messagingSenderId: "769126759906",
+    appId: "1:769126759906:web:d73353f0d05ba715368dbb"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -74,12 +74,12 @@ app.get('/account/login/:email/:password', function (req, res) {
         dal.balance(req.params.email, req.params.password).
                     then((docs) => {
                         console.log(docs);
-                        res.send({"token": token, "error": '',"balance": docs});
+                        res.send({"name": docs, "token": token, "error": '',"balance": docs});
                     })
         return token
     }
    } catch(e) {
-    res.send({"token": '', "error": e,"balance": 0});
+    res.send({"name": '', "token": '', "error": e,"balance": 0});
    }
 })
 

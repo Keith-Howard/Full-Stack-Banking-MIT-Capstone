@@ -36,7 +36,7 @@ function balance(email, password) {
         const collection = db
             .collection('users')
             .find({"email": email, "password": password})
-            .project({"balance": 1, '_id': 0})
+            .project({"balance": 1, "name": 1, '_id': 0})
             .toArray(function(err, docs) {
                 err ? reject(err) : resolve(docs);
             });

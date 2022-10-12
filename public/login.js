@@ -42,6 +42,10 @@ function Login() {
             allData.style.visibility = 'visible';
             const logout = document.getElementById("logout");
             logout.style.visibility = 'visible';
+            const userName = document.getElementById("userName");
+            userName.style.visibility = 'visible'; 
+            loggedInCtx.name = data.balance[0].name;
+            userName.innerHTML = "Welcome " + loggedInCtx.name;
             loggedInCtx.email = email;
             loggedInCtx.password = password;
             loggedInCtx.balance = data.balance[0].balance;
