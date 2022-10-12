@@ -1,6 +1,4 @@
 function NavBar(){
-  const loginIndexCtx = React.useContext(LoginUserContext);
-  console.log('navbar name variable ' + loginIndexCtx.name)
     return(
   
       <nav className="navbar navbar-expand-lg navbar-light bg-light">

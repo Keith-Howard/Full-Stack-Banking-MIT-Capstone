@@ -39,42 +39,60 @@ function CreateAccount(){
     //const [name, setName]         = React.useState('');
     //const [email, setEmail]       = React.useState('');
     //const [password, setPassword] = React.useState(''); 
-  
+    function validate(field, label) {
+      if (!field) {
+          props.setStatus('Empty ' + label + ' entry');
+          return false;
+      } 
+      return true;
+    }
+    
     function handle() {
-      console.log(props.name, props.email, props.password);
-      const url = `/account/create/${props.name}/${props.email}/${props.password}`;
-      (async () => {
-        var res = await fetch(url);
-        var data = await res.json();
-        console.log('handle func ' + JSON.stringify(data));
-        if (data.error !== '') {
-          props.setShow(true);
-          props.setStatus(data.error);
-        } else{
-          props.setShow(false);
-          props.setStatus('');
-        }
-      })();
+      const minValidPasswordLen = 8;
+      if (!validate(props.name, 'name')) return;
+      if (!validate(props.email, 'email')) return;
+      if (!validate(props.password, 'password')) return;
+      if (props.password.length >= minValidPasswordLen) {
+        console.log(props.name, props.email, props.password);
+        const url = `/account/create/${props.name}/${props.email}/${props.password}`;
+        (async () => {
+          var res = await fetch(url);
+          var data = await res.json();
+          console.log('handle func ' + JSON.stringify(data));
+          if (data.error !== '') {
+            props.setShow(true);
+            props.setStatus(data.error);
+          } else{
+            props.setShow(false);
+            props.setStatus('');
+          }
+        })();
+      } else {
+        props.setStatus(`Password Must Be ${minValidPasswordLen} Or More Characters`);
+      }
     }
   
     return (<>
   
       Name<br/>
-      <input type="input" 
+      <input id="name"
+        type="input" 
         className="form-control" 
         placeholder="Enter name" 
         value={props.name} 
         onChange={e => props.setName(e.currentTarget.value)} /><br/>
   
       Email address<br/>
-      <input type="input" 
+      <input id="email"
+        type="input" 
         className="form-control" 
         placeholder="Enter email" 
         value={props.email} 
         onChange={e => props.setEmail(e.currentTarget.value)}/><br/>
   
       Password<br/>
-      <input type="password" 
+      <input id="password"
+        type="password" 
         className="form-control" 
         placeholder="Enter password" 
         value={props.password} 
