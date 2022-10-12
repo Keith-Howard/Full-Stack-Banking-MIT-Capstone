@@ -50,7 +50,7 @@ async function transaction(email, password, amount) {
      await db.collection('users').updateOne(
         { 'email': email, 'password': password},
         {
-          $set: {'balance': amount},
+          $set: {'balance': Number(amount)},
           $currentDate: { lastModified: true }
         }
       );

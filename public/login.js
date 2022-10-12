@@ -48,7 +48,7 @@ function Login() {
             userName.innerHTML = "Welcome " + loggedInCtx.name;
             loggedInCtx.email = email;
             loggedInCtx.password = password;
-            loggedInCtx.balance = data.balance[0].balance;
+            loggedInCtx.balance = Number(data.balance[0].balance);
             loggedInCtx.userToken = data.token;
             props.setStatus('');
             props.setShow(false);
