@@ -65,41 +65,49 @@ app.get('/account/all/:email/:password', function(req,res) {
 app.get('/account/login/:email/:password', function (req, res) {
     console.log('hello ' + req.params.email, req.params.password);
    try {
-    x(req.params.email, req.params.password);
-    async function x(email, password) {
+    executeLogin(req.params.email, req.params.password);
+    async function executeLogin(email, password) {
         const auth  = firebase.auth();
-        const data = await auth.signInWithEmailAndPassword(email, password)
-        const token = await auth.currentUser.getIdToken()
-        console.log('token ' + JSON.stringify(token));
-        dal.balance(req.params.email, req.params.password).
-                    then((docs) => {
-                        console.log(docs);
-                        res.send({"name": docs, "token": token, "error": '',"balance": docs});
-                    })
-        return token
+        await auth.signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                console.log('index server side res ' + JSON.stringify(response));
+                response.user.getIdToken().then(token => {
+                    console.log('token ' + JSON.stringify(token));
+                    dal.balance(req.params.email, req.params.password).
+                        then((docs) => {
+                            console.log(docs);
+                            res.send({"token": token, "error": '',"balance": docs});
+                        })
+            })
+        })
     }
    } catch(e) {
-    res.send({"name": '', "token": '', "error": e,"balance": 0});
+    res.send({"token": '', "error": e,"balance": 0});
    }
 })
 
 //make transaction
-app.get('/account/transaction/:email/:password/:amount/', function (req, res) {
-    /* const idToken = req.headers.authorization
+app.get('/account/transaction/:email/:amount/', function (req, res) {
+    const idToken = req.headers.authorization;
     console.log('route toke ' + idToken);
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
-            console.log('decodedToken:',decodedToken); */
-            
-    dal.transaction(req.params.email, req.params.password, req.params.amount).
-        then((docs) => {
-            console.log(docs);
-            res.send(docs);
+            console.log('decodedToken:',decodedToken);
         })
-        .catch(function(error) {
-            console.log('error:', error);
-            res.send(error);
-        });
+            
+    dal.transaction(req.params.email, String(req.params.amount))
+    .then((result) => {
+        if (result.modifiedCount === 1) {
+            console.log(result);
+            res.send({"status": "success"});
+        } else {
+            res.send({"status": "failed"});
+        }
+    })
+    .catch((error) => {
+        console.log('error in index ' + error);
+        res.send({"status": error});
+    });
 });
 
 app.get('/account/logout', function (req, res) {
@@ -116,7 +124,6 @@ app.get('/account/logout', function (req, res) {
             // An error happened
             res.send({"error": error});
         });
-    
 });
 
 

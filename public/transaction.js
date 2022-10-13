@@ -1,6 +1,6 @@
 function Transaction(props) {
     const loggedInCtx = React.useContext(LoginUserContext);
-    const [amount, setAmount] = React.useState(0);
+    const [amount, setAmount] = React.useState('');
     const [transMessage, setTransMessage] = React.useState('');
     return (
         <Card
@@ -29,9 +29,11 @@ function Transaction(props) {
     )
 
     function handle() {
+        let intLoggedInBalance = Number(loggedInCtx.balance);
         let updateDb = true;
-        if (isNaN(Number(amount)) || Number(amount) <= 0) {
-            setTransMessage('Enter Valid Positive Number Greater Than 0');
+        if (isNaN(amount) || Number(amount) < .01) {
+            setTransMessage('Enter Number Greater or Equal to .01');
+            updateDb = false;
         } else {
             let numericAmount = Number(amount);
             if ((numericAmount - Math.floor(numericAmount) !== 0)){
@@ -41,42 +43,49 @@ function Transaction(props) {
                     return
                 }
             }
-            const maxTransAmount = 100000;
-            if (numericAmount > maxTransAmount) {
+        }
+        const maxTransAmount = 100000;
+            if (Number(amount) > maxTransAmount) {
                 setTransMessage(`Visit Branch for Transactions over $${maxTransAmount}`);
                 return
             }
-            if (props.transType === 'Deposit'){
-                loggedInCtx.balance = (Number(loggedInCtx.balance) + numericAmount).toFixed(2);
-                setTransMessage(`Deposited $${amount}`);
-            } else {
-                if (numericAmount > loggedInCtx.balance) {
-                    setTransMessage('Insufficient Funds');
-                    updateDb = false;
-                } else{
-                    loggedInCtx.balance = (Number(loggedInCtx.balance) - numericAmount).toFixed(2);
-                    setTransMessage(`Withdrew $${amount}`);
-                }
-            }
-            setAmount(0);
-            const url = `/account/transaction/${loggedInCtx.email}/${loggedInCtx.password}/${loggedInCtx.balance}`;
-            if (updateDb) {
-                (async () => {
-                    var res = await fetch(url)
-                    //var data = await res.json();
-                    //const auth  = firebase.auth();
-                    /* const token = await firebase.auth().currentUser.getIdToken()
-                    var res = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': token
-                        }
-                    }); */
-                    //var data = await res.json();
-                    console.log(res);
-                })();
+        if (props.transType === 'Withdraw') {
+            if (Number(amount) > intLoggedInBalance) {
+                setTransMessage('Insufficient Funds');
+                updateDb = false;
             }
         }
+        setAmount(0);
+        if (updateDb) {
+            let intAmount = Number(amount);
+            let newBalance;
+            if (props.transType === 'Deposit'){
+                newBalance = (intLoggedInBalance + intAmount).toFixed(2);
+            } else {
+                newBalance = (intLoggedInBalance - intAmount).toFixed(2);
+            }
+            const url = `/account/transaction/${loggedInCtx.email}/${String(newBalance)}`;
+            (async () => {
+                console.log('trans.js async func url ' + url);
+                var res = await fetch(url,
+                    { method: 'GET',
+                    headers: {
+                        'Authorization': loggedInCtx.userToken,
+                        'Content-Type': 'application/json'
+                    }});
+                var data  =  await res.json();
+                console.log('Trans.js data ' + JSON.stringify(data));
+                if (data.status === "success") {
+                    if (props.transType === 'Deposit') {
+                        setTransMessage(`Deposited $${amount}`);
+                    } else {
+                        setTransMessage(`Withdrew $${amount}`);
+                    }
+                    loggedInCtx.balance = newBalance;
+                } else {
+                    setTransMessage(data.status);
+                }
+            })();
+        }
     }
-
 }

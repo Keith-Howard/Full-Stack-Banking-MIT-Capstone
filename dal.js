@@ -40,20 +40,25 @@ function balance(email, password) {
             .toArray(function(err, docs) {
                 err ? reject(err) : resolve(docs);
             });
-        
     })
 }
 
 
-async function transaction(email, password, amount) {
-    const collection = db
-     await db.collection('users').updateOne(
-        { 'email': email, 'password': password},
-        {
-          $set: {'balance': Number(amount)},
-          $currentDate: { lastModified: true }
-        }
-      );
+function transaction(email, newBalance){
+    console.log('newBalance datatype of ' + newBalance + ' is ' + typeof(newBalance));
+    return new Promise((resolve, reject) => {    
+        const customer = db
+            .collection('users')         
+            .updateOne({"email": email }, {$set : {"balance" : newBalance}})
+            .then((result) => {
+                console.log('trans dal then ' + JSON.stringify(result));
+                resolve(result)
+            })
+            .catch((err) => {
+                console.log('trans dal catch ' + JSON.stringify(err));
+                reject(err)
+            });  
+    });   
 }
 
 module.exports = {create, all, balance, transaction};
