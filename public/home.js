@@ -4,7 +4,7 @@ function Home() {
             backgroundColor="#E99B53"
             header="Home"
             status=""
-            cardWidth='25rem'
+            cardWidth='25vw'
             body={
                 <>
                 <h5 className="card-title">Welcome to your digital banking experience.</h5>

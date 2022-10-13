@@ -8,7 +8,7 @@ function Logout() {
         backgroundColor="#E99B53"
         header="Logout"
         status=''
-        cardWidth='25rem'
+        cardWidth='25vw'
         body={show ? (
           <h5>{logoutMsg}</h5>
         ):(

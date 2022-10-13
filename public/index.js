@@ -7,7 +7,7 @@ function Spa() {
     <HashRouter>
       <div>
       <NavBar/>        
-          <div className="container" style={{padding: "20px"}}>
+          <div className="container ml-2" style={{padding: "20px"}}>
             <Route path="/" exact component={Home} />
             <Route path="/CreateAccount/" component={CreateAccount} />
             <Route path="/login/" component={Login} />

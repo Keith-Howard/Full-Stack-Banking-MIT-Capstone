@@ -7,7 +7,7 @@ function Login() {
         backgroundColor="#E99B53"
         header="Login"
         status={status}
-        cardWidth='25rem'
+        cardWidth='25vw'
         body={show ? 
           <LoginForm setShow={setShow} setStatus={setStatus}/> : 
           <h5>Successfully Logged In</h5>}

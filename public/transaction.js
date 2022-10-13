@@ -7,7 +7,7 @@ function Transaction(props) {
         backgroundColor="#E99B53"
         header={props.transType}
         status={transMessage}
-        cardWidth='25rem'
+        cardWidth='25vw'
         body={loggedInCtx.email === '' ? ( 
         <>
             <h2>LOGIN TO USE FEATURE</h2>

@@ -5,7 +5,7 @@ function Balance() {
             backgroundColor="#E99B53"
             header="Balance"
             status=""
-            cardWidth='25rem'
+            cardWidth='25vw'
             body={loginIndexCtx.email === '' ? ( 
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
