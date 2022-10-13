@@ -2,7 +2,7 @@ function NavBar(){
     return(
   
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a id="home" className="navbar-brand" style={{visibility: 'visible'}} href="#/">BadBank</a>
+        <a id="home" className="navbar-brand" style={{visibility: 'visible'}} href="#/">First National Bank</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -32,7 +32,7 @@ function NavBar(){
           </ul>
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <a id="userName" className="nav-link" style={{visibility: 'hidden'}}></a>
+              <a id="userName" className="nav-link" style={{visibility: 'hidden', fontWeight: 'bold'}}></a>
             </li> 
           </ul>
         </div>

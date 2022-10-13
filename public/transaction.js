@@ -4,7 +4,7 @@ function Transaction(props) {
     const [transMessage, setTransMessage] = React.useState('');
     return (
         <Card
-        bgcolor="warning"
+        backgroundColor="#E99B53"
         header={props.transType}
         status={transMessage}
         cardWidth='25rem'

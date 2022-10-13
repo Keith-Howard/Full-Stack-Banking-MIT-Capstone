@@ -89,8 +89,12 @@ app.get('/account/login/:email/:password', function (req, res) {
                             console.log(docs);
                             res.send({"token": token, "error": '',"balance": docs});
                         })
+                })
             })
-        })
+            .catch((e) => {
+                console.log('index login error ' + e);
+                res.send({"token": '', "error": e.message,"balance": ''});
+            })
     }
    } catch(e) {
     res.send({"token": '', "error": e,"balance": 0});

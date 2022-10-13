@@ -7,7 +7,7 @@ function CreateAccount(){
   
     return (
       <Card
-        bgcolor="primary"
+        backgroundColor="#E99B53"
         header="Create Account"
         status={status}
         cardWidth='25rem'
@@ -84,7 +84,7 @@ function CreateAccount(){
   
       Email address<br/>
       <input id="email"
-        type="input" 
+        type="email" 
         className="form-control" 
         placeholder="Enter email" 
         value={props.email} 

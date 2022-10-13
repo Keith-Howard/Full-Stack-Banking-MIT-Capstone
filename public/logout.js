@@ -5,7 +5,7 @@ function Logout() {
     console.log('logout page')
     return (
         <Card
-        bgcolor="secondary"
+        backgroundColor="#E99B53"
         header="Logout"
         status=''
         cardWidth='25rem'

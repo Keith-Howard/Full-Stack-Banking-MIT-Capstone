@@ -2,7 +2,7 @@ function Balance() {
     const loginIndexCtx = React.useContext(LoginUserContext);
     return (
         <Card
-            bgcolor="info"
+            backgroundColor="#E99B53"
             header="Balance"
             status=""
             cardWidth='25rem'
@@ -12,7 +12,8 @@ function Balance() {
                 </>
             ):(
                 <>
-                    {loginIndexCtx.balance}
+                    <h3>Available Balance</h3><br/>
+                    <h3>${Number(loginIndexCtx.balance).toFixed(2)}</h3>
                 </>
             )}
         />

@@ -29,7 +29,7 @@ function AllData() {
     }  
     return (
         <Card
-            bgcolor="danger"
+            backgroundColor="#E99B53"
             header="All Data"
             status=""
             cardWidth='50rem'
