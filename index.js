@@ -19,7 +19,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-async function authorizeTest(email, password) {
+async function createFirebaseCredentials(email, password) {
     const auth  = firebase.auth();
     try {
         await auth.createUserWithEmailAndPassword(email, password);
@@ -31,35 +31,46 @@ async function authorizeTest(email, password) {
       }
 }
 
-async function createMongoUser(errorMsg, name, email, password) {
-    if( errorMsg === ''){
+async function createMongoUser(name, email, password) {
+    try {
         await dal.create(name, email, password).
-                then((user) => {
-                    console.log('dal ' + user);
-                    return user;
-                })
+            then((user) => {
+                console.log('dal ' + user);
+                return user;
+            })
     }
+    catch (e) {
+        console.log(e);
+        return e.message;
+      }
 }
 
-//create
-app.get('/account/create/:name/:email/:password', async function (req, res) {
-    const auth  = firebase.auth();      
-    let errorMesg = await authorizeTest(req.params.email, req.params.password);
-    let user = await createMongoUser(errorMesg, req.params.name, req.params.email, req.params.password)
-    if (errorMesg === '') {
+//create user
+app.get('/account/create/:name/:email/:password', async function (req, res) {      
+    let errorMsg = await createFirebaseCredentials(req.params.email, req.params.password);
+    if (errorMsg === '') {
+        await createMongoUser(req.params.name, req.params.email, req.params.password)
+    }
+    if (errorMsg === '') {
         res.send({"email": req.params.email, "error": ''});
     }else {
-        res.send({"email": req.params.email, "error":errorMesg});
+        res.send({"email": req.params.email, "error":errorMsg});
     }
 });
 
 //get all data
 app.get('/account/all/:email/:password', function(req,res) {
-    dal.all(req.params.email, req.params.password).
+    try {
+        dal.all(req.params.email, req.params.password).
         then((docs) => {
             console.log(docs);
             res.send(docs);
         })
+    }
+    catch (e) {
+        console.log(e);
+        res.send(e.message);
+      }
 })
 
 app.get('/account/login/:email/:password', function (req, res) {
