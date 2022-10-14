@@ -26,7 +26,7 @@ async function createFirebaseCredentials(email, password) {
         return '';
       } 
       catch (e) {
-        console.log(e);
+        console.log('createFirebaseCredentials ' + e.message);
         return e.message;
       }
 }
@@ -35,25 +35,28 @@ async function createMongoUser(name, email, password) {
     try {
         await dal.create(name, email, password).
             then((user) => {
-                console.log('dal ' + user);
-                return user;
-            })
+                console.log('dal ' + JSON.stringify(user));
+            });
+            return '';
     }
     catch (e) {
-        console.log(e);
+        console.log('createMongoUser ' + e.message);
         return e.message;
       }
 }
 
 //create user
-app.get('/account/create/:name/:email/:password', async function (req, res) {      
+app.get('/account/create/:name/:email/:password', async function (req, res) {
+    console.log('create account index.js ' + req.params.email);      
     let errorMsg = await createFirebaseCredentials(req.params.email, req.params.password);
+    console.log('error message ' + errorMsg);
     if (errorMsg === '') {
-        await createMongoUser(req.params.name, req.params.email, req.params.password)
-    }
+        errorMsg = await createMongoUser(req.params.name, req.params.email, req.params.password);
+    };
     if (errorMsg === '') {
         res.send({"email": req.params.email, "error": ''});
     }else {
+        console.log('create user error ' + JSON.stringify({"email": req.params.email, "error":errorMsg}));
         res.send({"email": req.params.email, "error":errorMsg});
     }
 });

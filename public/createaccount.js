@@ -36,9 +36,6 @@ function CreateAccount(){
   }
   
   function CreateForm(props){
-    //const [name, setName]         = React.useState('');
-    //const [email, setEmail]       = React.useState('');
-    //const [password, setPassword] = React.useState(''); 
     function validate(field, label) {
       if (!field) {
           props.setStatus('Empty ' + label + ' entry');
@@ -46,20 +43,32 @@ function CreateAccount(){
       } 
       return true;
     }
+
+    const validateEmail = (email) => {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
     
     function handle() {
       const minValidPasswordLen = 8;
       if (!validate(props.name, 'name')) return;
       if (!validate(props.email, 'email')) return;
       if (!validate(props.password, 'password')) return;
+      if (!validateEmail(props.email)){
+        props.setStatus('Invalid Email Address');
+        return;
+      }
       if (props.password.length >= minValidPasswordLen) {
         console.log(props.name, props.email, props.password);
         const url = `/account/create/${props.name}/${props.email}/${props.password}`;
         (async () => {
           var res = await fetch(url);
           var data = await res.json();
-          console.log('handle func ' + JSON.stringify(data));
           if (data.error !== '') {
+            console.log('handle function ' + data.error);
             props.setShow(true);
             props.setStatus(data.error);
           } else{
@@ -84,7 +93,8 @@ function CreateAccount(){
   
       Email address<br/>
       <input id="email"
-        type="email" 
+        type="input"
+        style={{}} 
         className="form-control" 
         placeholder="Enter email" 
         value={props.email} 
