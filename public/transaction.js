@@ -1,5 +1,6 @@
 function Transaction(props) {
-    const loggedInUser = localStorage.getItem('loggedInUser');
+    const loggedInUserString = localStorage.getItem('loggedInUser');
+    let loggedInUser = JSON.parse(loggedInUserString);
     const [amount, setAmount] = React.useState('');
     const [transMessage, setTransMessage] = React.useState('');
     return (
@@ -8,7 +9,7 @@ function Transaction(props) {
         header={props.transType}
         status={transMessage}
         cardWidth='25vw'
-        body={JSON.parse(loggedInUser).email === '' ? ( 
+        body={loggedInUser.email === '' ? ( 
         <>
             <h2>LOGIN TO USE FEATURE</h2>
         </>
@@ -29,7 +30,7 @@ function Transaction(props) {
     )
 
     function handle() {
-        let intLoggedInBalance = Number(JSON.parse(loggedInUser).balance);
+        let intLoggedInBalance = Number(loggedInUser.balance);
         let updateDb = true;
         if (isNaN(amount) || Number(amount) < .01) {
             setTransMessage('Enter Number Greater or Equal to .01');
@@ -69,13 +70,13 @@ function Transaction(props) {
             } else {
                 newBalance = (intLoggedInBalance - intAmount).toFixed(2);
             }
-            const url = `/account/transaction/${JSON.parse(loggedInUser).email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
+            const url = `/account/transaction/${loggedInUser.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
             (async () => {
                 console.log('trans.js async func url ' + url);
                 var res = await fetch(url,
                     { method: 'GET',
                     headers: {
-                        'Authorization': JSON.parse(loggedInUser).userToken,
+                        'Authorization': loggedInUser.userToken,
                         'Content-Type': 'application/json'
                     }});
                 var data  =  await res.json();
@@ -86,7 +87,8 @@ function Transaction(props) {
                     } else {
                         setTransMessage(`Withdrew $${amount}`);
                     }
-                    JSON.parse(loggedInUser).balance = newBalance;
+                    loggedInUser.balance = newBalance;
+                    localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
                 } else {
                     setTransMessage(data.status);
                 }
