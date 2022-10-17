@@ -61,6 +61,20 @@ app.get('/account/create/:name/:email/:password', async function (req, res) {
     }
 });
 
+app.get('/account/alltransactions/:email', function(req, res) {
+    try {
+        dal.getAllTransactions(req.params.email).
+        then((docs) => {
+            console.log(docs);
+            res.send(docs);
+        })
+    }
+    catch (e) {
+        console.log(e);
+        res.send(e.message);
+    }
+})
+
 //get all data
 app.get('/account/all/:email/:password', function(req,res) {
     try {
@@ -105,15 +119,15 @@ app.get('/account/login/:email/:password', function (req, res) {
 })
 
 //make transaction
-app.get('/account/transaction/:email/:amount/', function (req, res) {
+app.get('/account/transaction/:email/:amount/:transType/:date/:balance', function (req, res) {
     const idToken = req.headers.authorization;
     console.log('route toke ' + idToken);
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
             console.log('decodedToken:',decodedToken);
         })
-            
-    dal.transaction(req.params.email, String(req.params.amount))
+        
+    dal.transaction(req.params.email, String(req.params.balance))
     .then((result) => {
         if (result.modifiedCount === 1) {
             console.log(result);
@@ -121,6 +135,19 @@ app.get('/account/transaction/:email/:amount/', function (req, res) {
         } else {
             res.send({"status": "failed"});
         }
+        dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
+        .then((result) => {
+            if (result.modifiedCount === 1) {
+                console.log(result);
+                res.send({"status": "success"});
+            } else {
+                res.send({"status": "failed"});
+            }
+        })
+        .catch((error) => {
+            console.log('error in index ' + error);
+            res.send({"status": error});
+        });
     })
     .catch((error) => {
         console.log('error in index ' + error);

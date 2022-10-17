@@ -33,6 +33,8 @@ function Logout() {
                 balance.style.display = 'none';
                 const allData = document.getElementById("allData");
                 allData.style.display = 'none';
+                const transHistory = document.getElementById("transHistory");
+                transHistory.style.display = 'none';
                 const logout = document.getElementById("logout");
                 logout.style.display = 'none';
                 const userName = document.getElementById("userName");

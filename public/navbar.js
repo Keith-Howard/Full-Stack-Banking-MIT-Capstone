@@ -27,6 +27,9 @@ function NavBar(){
                 <a id="allData" className="nav-link" style={{display: 'none'}} href="#/alldata/">All Data</a>
               </li>
               <li className="nav-item">
+                <a id="transHistory" className="nav-link" style={{display: 'none'}} href="#/transHistory/">Transaction History</a>
+              </li>
+              <li className="nav-item">
                 <a id="logout" className="nav-link" style={{display: 'none'}} href="#/logout/">Log Out</a>
               </li>
           </ul>

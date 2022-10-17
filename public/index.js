@@ -15,6 +15,7 @@ function Spa() {
             <Route path="/withdraw/" component={Withdraw} />
             <Route path="/balance/" component={Balance} />
             <Route path="/alldata/" component={AllData} />
+            <Route path="/transHistory/" component={TransHistory} />
             <Route path="/logout/" component={Logout} />
           </div>
       </div>

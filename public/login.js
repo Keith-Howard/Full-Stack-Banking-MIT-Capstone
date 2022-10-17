@@ -40,6 +40,8 @@ function Login() {
             balance.style.display ='inline';
             const allData = document.getElementById("allData");
             allData.style.display ='inline';
+            const transHistory = document.getElementById("transHistory");
+            transHistory.style.display ='inline';
             const logout = document.getElementById("logout");
             logout.style.display ='inline';
             const userName = document.getElementById("userName");

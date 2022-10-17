@@ -56,6 +56,11 @@ function Transaction(props) {
             }
         }
         setAmount(0);
+        const d = new Date()
+        let month = d.getMonth() + 1;
+        let day = d.getDate();
+        let year = d.getFullYear();
+        let date = `${month}-${day}-${year}`;
         if (updateDb) {
             let intAmount = Number(amount);
             let newBalance;
@@ -64,7 +69,7 @@ function Transaction(props) {
             } else {
                 newBalance = (intLoggedInBalance - intAmount).toFixed(2);
             }
-            const url = `/account/transaction/${loggedInCtx.email}/${String(newBalance)}`;
+            const url = `/account/transaction/${loggedInCtx.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
             (async () => {
                 console.log('trans.js async func url ' + url);
                 var res = await fetch(url,
