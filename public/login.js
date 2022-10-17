@@ -17,8 +17,8 @@ function Login() {
   
   function LoginForm(props){
     const [email, setEmail]       = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const loggedInCtx = React.useContext(LoginUserContext); 
+    const [password, setPassword] = React.useState(''); 
+    const loggedInUser = {};
 
     function handle(){
       const url = `/account/login/${email}/${password}`;
@@ -46,12 +46,13 @@ function Login() {
             logout.style.display ='inline';
             const userName = document.getElementById("userName");
             userName.style.display ='inline'; 
-            loggedInCtx.name = data.balance[0].name;
-            userName.innerHTML = "Welcome " + loggedInCtx.name;
-            loggedInCtx.email = email;
-            loggedInCtx.password = password;
-            loggedInCtx.balance = Number(data.balance[0].balance);
-            loggedInCtx.userToken = data.token;
+            loggedInUser.name = data.balance[0].name;
+            userName.innerHTML = "Welcome " + loggedInUser.name;
+            loggedInUser.email = email;
+            loggedInUser.password = password;
+            loggedInUser.balance = Number(data.balance[0].balance);
+            loggedInUser.userToken = data.token;
+            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
             props.setStatus('');
             props.setShow(false);
           }else{

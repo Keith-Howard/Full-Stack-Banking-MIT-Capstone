@@ -1,11 +1,11 @@
 function TransHistory() {
-    const loggedInCtx = React.useContext(LoginUserContext);
+    const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState('');
     const [filter, setFilter] = React.useState('Filter')
 
     React.useEffect(() => {
         //fetch all transactions from API
-        fetch(`/account/alltransactions/${loggedInCtx.email}`)
+        fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`)
             .then(response => response.json())
             .then(data => {
                 console.log('all transactions ' + JSON.stringify(data));
@@ -43,7 +43,7 @@ function TransHistory() {
             header="Transaction History"
             status=""
             cardWidth='50rem'
-            body={loggedInCtx.email === '' ? (
+            body={JSON.parse(loggedInUser).email === '' ? (
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
                 </>

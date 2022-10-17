@@ -1,5 +1,5 @@
 function Transaction(props) {
-    const loggedInCtx = React.useContext(LoginUserContext);
+    const loggedInUser = localStorage.getItem('loggedInUser');
     const [amount, setAmount] = React.useState('');
     const [transMessage, setTransMessage] = React.useState('');
     return (
@@ -8,7 +8,7 @@ function Transaction(props) {
         header={props.transType}
         status={transMessage}
         cardWidth='25vw'
-        body={loggedInCtx.email === '' ? ( 
+        body={JSON.parse(loggedInUser).email === '' ? ( 
         <>
             <h2>LOGIN TO USE FEATURE</h2>
         </>
@@ -29,7 +29,7 @@ function Transaction(props) {
     )
 
     function handle() {
-        let intLoggedInBalance = Number(loggedInCtx.balance);
+        let intLoggedInBalance = Number(JSON.parse(loggedInUser).balance);
         let updateDb = true;
         if (isNaN(amount) || Number(amount) < .01) {
             setTransMessage('Enter Number Greater or Equal to .01');
@@ -69,13 +69,13 @@ function Transaction(props) {
             } else {
                 newBalance = (intLoggedInBalance - intAmount).toFixed(2);
             }
-            const url = `/account/transaction/${loggedInCtx.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
+            const url = `/account/transaction/${JSON.parse(loggedInUser).email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
             (async () => {
                 console.log('trans.js async func url ' + url);
                 var res = await fetch(url,
                     { method: 'GET',
                     headers: {
-                        'Authorization': loggedInCtx.userToken,
+                        'Authorization': JSON.parse(loggedInUser).userToken,
                         'Content-Type': 'application/json'
                     }});
                 var data  =  await res.json();
@@ -86,7 +86,7 @@ function Transaction(props) {
                     } else {
                         setTransMessage(`Withdrew $${amount}`);
                     }
-                    loggedInCtx.balance = newBalance;
+                    JSON.parse(loggedInUser).balance = newBalance;
                 } else {
                     setTransMessage(data.status);
                 }

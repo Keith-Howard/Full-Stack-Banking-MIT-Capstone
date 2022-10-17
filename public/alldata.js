@@ -1,10 +1,10 @@
 function AllData() {
-    const loggedInCtx = React.useContext(LoginUserContext);
+    const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState('');
 
     React.useEffect(() => {
         //fetch all accounts from API
-        fetch(`/account/all/${loggedInCtx.email}/${loggedInCtx.password}`)
+        fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -33,7 +33,7 @@ function AllData() {
             header="All Data"
             status=""
             cardWidth='50rem'
-            body={loggedInCtx.email === '' ? (
+            body={JSON.parse(loggedInUser).email === '' ? (
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
                 </>

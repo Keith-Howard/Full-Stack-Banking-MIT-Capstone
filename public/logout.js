@@ -1,5 +1,5 @@
 function Logout() {
-    const loginIndexCtx = React.useContext(LoginUserContext);
+    const loggedInUser = {};
     const [logoutMsg, setLogoutMsg] = React.useState('')
     console.log('logout page')
     return (
@@ -21,10 +21,7 @@ function Logout() {
             var res = await fetch('/account/logout');
             var data = await res.json();
             if (data.error === '') {
-                loginIndexCtx.name = '';
-                loginIndexCtx.email = '';
-                loginIndexCtx.password = '';
-                loginIndexCtx.balance = 0;
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
                 const deposit = document.getElementById("deposit");
                 deposit.style.display = 'none';
                 const withdraw = document.getElementById("withdraw");

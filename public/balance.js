@@ -1,19 +1,19 @@
 function Balance() {
-    const loginIndexCtx = React.useContext(LoginUserContext);
+    const loggedInUser = localStorage.getItem('loggedInUser');
     return (
         <Card
             backgroundColor="#E99B53"
             header="Balance"
             status=""
             cardWidth='25vw'
-            body={loginIndexCtx.email === '' ? ( 
+            body={JSON.parse(loggedInUser).email === '' ? ( 
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
                 </>
             ):(
                 <>
                     <h3>Available Balance</h3><br/>
-                    <h3>${Number(loginIndexCtx.balance).toFixed(2)}</h3>
+                    <h3>${Number(JSON.parse(loggedInUser).balance).toFixed(2)}</h3>
                 </>
             )}
         />

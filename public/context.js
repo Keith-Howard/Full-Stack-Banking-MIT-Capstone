@@ -1,5 +1,4 @@
 const UserContext = React.createContext(null);
-const LoginUserContext = React.createContext({name: '', email:'', password:'', balance:0, userToken: ''});
  
 function Card(props){
     function classes(){
@@ -24,5 +23,4 @@ function Card(props){
 const contextExports = {
   Card,
   UserContext,
-  LoginUserContext
 }
