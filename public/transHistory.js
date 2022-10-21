@@ -5,7 +5,13 @@ function TransHistory() {
 
     React.useEffect(() => {
         //fetch all transactions from API
-        fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`)
+        fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`,
+        { method: 'GET',
+            headers: {
+                'Authorization': loggedInUser.userToken,
+                'Content-Type': 'application/json'
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 console.log('all transactions ' + JSON.stringify(data));

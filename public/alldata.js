@@ -1,21 +1,21 @@
 function AllData() {
     const loggedInUser = localStorage.getItem('loggedInUser');
-    const [data, setData] = React.useState('');
+    const [data, setData] = React.useState({exists: false, tableData:''});
 
-    React.useEffect(() => {
-        //fetch all accounts from API
-        fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setData(data);
-            })
-    }, [])
-    function getTableData() {
-        let tableString = "";
-        if (data !== '') {
-            for (const user of data) {
-                tableString = tableString + 
+    async function getAllData() {
+        console.log(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`);
+        const response = await fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`,
+        { method: 'GET',
+            headers: {
+                'Authorization': loggedInUser.userToken,
+                'Content-Type': 'application/json'
+            }
+        });
+        const allData = await response.json();
+        let dataString = '';
+        if (allData !== '') {
+            for (const user of allData) {
+                dataString = dataString + 
                 `<tr>
                     <td>${user.name}</td>
                     <td>${user.email}</td>
@@ -23,9 +23,11 @@ function AllData() {
                     <td>${user.balance}</td>
                 </tr>`
             }
-        }
-        console.log(tableString);
-        return window.HTMLReactParser(tableString)
+        };
+        setData({exists:true, tableData: dataString});
+    }
+    if (!data.exists) {
+        getAllData();
     }  
     return (
         <Card
@@ -48,9 +50,10 @@ function AllData() {
                                 <th scope="col">Balance</th>
                             </tr>
                         </thead>
-                        <tbody className="table-light">
-                            {getTableData()}
-                        </tbody>
+                        {!data.exists ? (<></>):
+                        (<tbody className="table-light">
+                            {window.HTMLReactParser(data.tableData)}
+                        </tbody>)}
                     </table>
                 </>
             )}

@@ -52,6 +52,7 @@ function all(email, password) {
     })
 }
 
+//login route calls this function to retrieve the balance after succesfull authentication
 function balance(email, password) {
     console.log('input ' + email, password);
     return new Promise((resolve, reject) => {

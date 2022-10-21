@@ -63,6 +63,12 @@ app.get('/account/create/:name/:email/:password', async function (req, res) {
 
 app.get('/account/alltransactions/:email', function(req, res) {
     try {
+        const idToken = req.headers.authorization;
+        console.log('route token ' + idToken);
+        admin.auth().verifyIdToken(idToken)
+        .then(function(decodedToken) {
+            console.log('decodedToken:',decodedToken);
+        })
         dal.getAllTransactions(req.params.email).
         then((docs) => {
             console.log(docs);
@@ -78,6 +84,9 @@ app.get('/account/alltransactions/:email', function(req, res) {
 //get all data
 app.get('/account/all/:email/:password', function(req,res) {
     try {
+        const idToken = req.headers.authorization;
+        console.log('route token ' + idToken);
+        admin.auth().verifyIdToken(idToken)
         dal.all(req.params.email, req.params.password).
         then((docs) => {
             console.log(docs);
@@ -121,21 +130,13 @@ app.get('/account/login/:email/:password', function (req, res) {
 //make transaction
 app.get('/account/transaction/:email/:amount/:transType/:date/:balance', function (req, res) {
     const idToken = req.headers.authorization;
-    console.log('route toke ' + idToken);
+    console.log('route token ' + idToken);
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
             console.log('decodedToken:',decodedToken);
         })
         
-    dal.transaction(req.params.email, String(req.params.balance))
-    .then((result) => {
-        if (result.modifiedCount === 1) {
-            console.log(result);
-            res.send({"status": "success"});
-        } else {
-            res.send({"status": "failed"});
-        }
-        dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
+        dal.transaction(req.params.email, String(req.params.balance))
         .then((result) => {
             if (result.modifiedCount === 1) {
                 console.log(result);
@@ -143,12 +144,20 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
             } else {
                 res.send({"status": "failed"});
             }
+            dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
+            .then((result) => {
+                if (result.modifiedCount === 1) {
+                    console.log(result);
+                    res.send({"status": "success"});
+                } else {
+                    res.send({"status": "failed"});
+                }
+            })
+            .catch((error) => {
+                console.log('error in index ' + error);
+                res.send({"status": error});
+            });
         })
-        .catch((error) => {
-            console.log('error in index ' + error);
-            res.send({"status": error});
-        });
-    })
     .catch((error) => {
         console.log('error in index ' + error);
         res.send({"status": error});
@@ -157,18 +166,30 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
 
 app.get('/account/logout', function (req, res) {
     console.log('logout route');
-    const auth  = firebase.auth();
-    auth.signOut()
-        .then(function() {
-            // Sign-out successful.
-            console.log('good logout');
-            res.send({"error": ''});
+    console.log('req headers ' + JSON.stringify(req.headers));
+    const idToken = req.headers.authorization;
+    console.log('route token ' + idToken);
+    admin.auth().verifyIdToken(idToken)
+        .then(function(decodedToken) {
+            console.log('decodedToken:',decodedToken);
         })
-        .catch(function(error) {
-            console.log('bad logout');
-            // An error happened
-            res.send({"error": error});
-        });
+        const auth  = firebase.auth();
+        auth.signOut()
+            .then(function() {
+                // Sign-out successful.
+                console.log('good logout');
+                res.send({"error": ''});
+            })
+            .catch(function(error) {
+                console.log('bad logout');
+                // An error happened
+                res.send({"error": error});
+            })
+    .catch((error) => {
+        console.log('error in index ' + error);
+        res.send({"status": error});
+    });
+        
 });
 
 

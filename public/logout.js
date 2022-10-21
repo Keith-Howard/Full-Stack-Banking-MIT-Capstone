@@ -1,7 +1,47 @@
 function Logout() {
-    const loggedInUser = {};
-    const [logoutMsg, setLogoutMsg] = React.useState('')
-    console.log('logout page')
+    console.log('logout component line 2');
+    const loggedInUserString = localStorage.getItem('loggedInUser');
+    let loggedInUser = JSON.parse(loggedInUserString);
+    const [logStatus, setLogStatus] = React.useState({logoutStatus: false, logoutMsg: ''});
+    
+    async function logoutUser() {
+        const response = await fetch('/account/logout',
+        { method: 'GET',
+        headers: {
+            'Authorization': loggedInUser.userToken,
+            'Content-Type': 'application/json'
+        }
+        });
+        const data = await response.json();
+        if (data.error === '') {
+            console.log('logoutform if line 40');
+            localStorage.setItem('loggedInUser', JSON.stringify({}));
+            const deposit = document.getElementById("deposit");
+            deposit.style.display = 'none';
+            const withdraw = document.getElementById("withdraw");
+            withdraw.style.display = 'none';
+            const balance = document.getElementById("balance");
+            balance.style.display = 'none';
+            const allData = document.getElementById("allData");
+            allData.style.display = 'none';
+            const transHistory = document.getElementById("transHistory");
+            transHistory.style.display = 'none';
+            const logout = document.getElementById("logout");
+            logout.style.display = 'none';
+            const userName = document.getElementById("userName");
+            userName.style.display = 'none';
+            const createAccount = document.getElementById("createAccount");
+            createAccount.style.display ='inline';
+            const login = document.getElementById("login");
+            login.style.display ='inline';
+            setLogStatus({logoutStatus: true, logoutMsg: 'Successfully Logged Out'});
+        } else {
+            setLogStatus({logoutStatus: false, logoutMsg: 'Logout Error ' + data.error});
+        }
+    }
+    if (!logStatus.logoutStatus) {
+        logoutUser();
+    }
     return (
         <Card
         backgroundColor="#E99B53"
@@ -10,41 +50,9 @@ function Logout() {
         cardWidth='25vw'
         body={
         <>
-            <LogoutForm setLogoutMsg={setLogoutMsg}/>
-            <h4>{logoutMsg}</h4>
+            <h4>{logStatus.logoutMsg}</h4>
         </>
         }
-    />);
-    
-    function LogoutForm(props) {
-        (async()=> {
-            var res = await fetch('/account/logout');
-            var data = await res.json();
-            if (data.error === '') {
-                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-                const deposit = document.getElementById("deposit");
-                deposit.style.display = 'none';
-                const withdraw = document.getElementById("withdraw");
-                withdraw.style.display = 'none';
-                const balance = document.getElementById("balance");
-                balance.style.display = 'none';
-                const allData = document.getElementById("allData");
-                allData.style.display = 'none';
-                const transHistory = document.getElementById("transHistory");
-                transHistory.style.display = 'none';
-                const logout = document.getElementById("logout");
-                logout.style.display = 'none';
-                const userName = document.getElementById("userName");
-                userName.style.display = 'none';
-                const createAccount = document.getElementById("createAccount");
-                createAccount.style.display ='inline';
-                const login = document.getElementById("login");
-                login.style.display ='inline';
-                props.setLogoutMsg('Successfully Logged Out');
-            } else {
-                props.setLogoutMsg('Logout Error ' + data.error);
-            }
-        })()  
-    }
-    
+    />
+    );
 }
