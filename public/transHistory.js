@@ -1,34 +1,27 @@
 function TransHistory() {
     const loggedInUser = localStorage.getItem('loggedInUser');
-    const [data, setData] = React.useState('');
+    const [data, setData] = React.useState({exists: false, tableData:''});
     const [filter, setFilter] = React.useState('Filter')
 
-    React.useEffect(() => {
-        //fetch all transactions from API
-        fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`,
+
+    async function getTransData(){
+        const response = await fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`,
         { method: 'GET',
             headers: {
                 'Authorization': loggedInUser.userToken,
                 'Content-Type': 'application/json'
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('all transactions ' + JSON.stringify(data));
-                setData(data);
-            })
-    }, [])
-
-    function getTableData() {
+        });
+        const allTrans = await response.json();
         let tableString = "";
-        if (data !== '') {
+        if (allTrans !== '') {
             let transData;
             if (filter === 'Withdrawals'){
-                transData = data.filter(trans => trans.transType === "Withdraw");
+                transData = allTrans.filter(trans => trans.transType === "Withdraw");
             }else if (filter === 'Deposits'){
-                transData = data.filter(trans => trans.transType === "Deposit");
+                transData = allTrans.filter(trans => trans.transType === "Deposit");
             } else {
-                transData = data
+                transData = allTrans;
             }
             for (const user of transData) {
                 tableString = tableString + 
@@ -38,10 +31,13 @@ function TransHistory() {
                     <td>${Number(user.amount).toFixed(2)}</td>
                 </tr>`
             }
-        }
-        console.log(tableString);
-        return window.HTMLReactParser(tableString)
-    }  
+        };
+        setData({exists: true, tableData: tableString});
+    }
+
+    if (!data.exists) {
+        getTransData();
+    }
 
     return (
         <Card
@@ -60,9 +56,18 @@ function TransHistory() {
                         {filter}
                     </button>
                     <div className="dropdown-menu btn-secondary" aria-labelledby="dropdownMenu2">
-                        <button className="dropdown-item" onClick={()=>{setFilter('All')}} type="button">All</button>
-                        <button className="dropdown-item" onClick={()=>{setFilter('Deposits')}} type="button">Deposits</button>
-                        <button className="dropdown-item" onClick={()=>{setFilter('Withdrawals')}} type="button">Withdrawels</button>
+                        <button className="dropdown-item" onClick={()=>{
+                            setFilter('All');
+                            setData({exists: false, tableData:''});
+                            }} type="button">All</button>
+                        <button className="dropdown-item" onClick={()=>{
+                            setFilter('Deposits');
+                            setData({exists: false, tableData:''});
+                            }} type="button">Deposits</button>
+                        <button className="dropdown-item" onClick={()=>{
+                            setFilter('Withdrawals');
+                            setData({exists: false, tableData:''});
+                            }} type="button">Withdrawels</button>
                     </div>
                 </div>
                     <table className='table'>
@@ -74,7 +79,7 @@ function TransHistory() {
                             </tr>
                         </thead>
                         <tbody className="table-light">
-                            {getTableData()}
+                            {window.HTMLReactParser(data.tableData)}
                         </tbody>
                     </table>
                 </>
