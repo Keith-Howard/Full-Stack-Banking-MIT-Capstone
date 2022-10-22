@@ -3,9 +3,24 @@ var app = express();
 var cors = require('cors');
 var dal = require('./dal.js');
 const admin   = require('./admin');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 const firebase = require('firebase');
 app.use(express.static('public'));
 app.use(cors());
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            title: 'Bank API',
+            version: '1.0.0'
+        }
+    },
+    apis: ['index.js']
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 const firebaseConfig = {
     apiKey: "AIzaSyBABX_sKI35BiJ-rTQMRwnsgI3iOg-gtWk",
@@ -45,6 +60,36 @@ async function createMongoUser(name, email, password) {
       }
 }
 
+/**
+ * @swagger
+ * paths:
+ *   /account/create/{name}/{email}/{password}:
+ *    get:
+ *      summary: Create new user
+ *      parameters:
+ *        - name: name
+ *          in: path
+ *          required: true
+ *          description: user name
+ *          schema:
+ *            type: string
+ *        - name: email
+ *          in: path
+ *          required: true
+ *          description: user email address
+ *          schema:
+ *            type: string
+ *        - name: password
+ *          in: path
+ *          required: true
+ *          description: user password
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
+
 //create user
 app.get('/account/create/:name/:email/:password', async function (req, res) {
     console.log('create account index.js ' + req.params.email);      
@@ -60,6 +105,36 @@ app.get('/account/create/:name/:email/:password', async function (req, res) {
         res.send({"email": req.params.email, "error":errorMsg});
     }
 });
+
+/**
+ * @swagger
+ * paths:
+ *   /account/alltransactions/{email}:
+ *    get:
+ *      summary: User transaction history
+ *      parameters:
+ *        - name: email
+ *          in: path
+ *          required: true
+ *          description: user email address
+ *          schema:
+ *            type: string
+ *        - name: Authorization
+ *          in: header
+ *          required: true
+ *          description: 'user token'
+ *          schema:
+ *            type: string
+ *        - name: content-type
+ *          in: header
+ *          required: true
+ *          description: ''
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
 
 app.get('/account/alltransactions/:email', function(req, res) {
     try {
@@ -81,6 +156,42 @@ app.get('/account/alltransactions/:email', function(req, res) {
     }
 })
 
+/**
+ * @swagger
+ * paths:
+ *   /account/all/{email}/{password}:
+ *    get:
+ *      summary: All data for user
+ *      parameters:
+ *        - name: email
+ *          in: path
+ *          required: true
+ *          description: user email address
+ *          schema:
+ *            type: string
+ *        - name: password
+ *          in: path
+ *          required: true
+ *          description: user password
+ *          schema:
+ *            type: string
+ *        - name: Authorization
+ *          in: header
+ *          required: true
+ *          description: 'user token'
+ *          schema:
+ *            type: string
+ *        - name: content-type
+ *          in: header
+ *          required: true
+ *          description: ''
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
+
 //get all data
 app.get('/account/all/:email/:password', function(req,res) {
     try {
@@ -98,6 +209,30 @@ app.get('/account/all/:email/:password', function(req,res) {
         res.send(e.message);
       }
 })
+
+/**
+ * @swagger
+ * paths:
+ *   /account/login/{email}/{password}:
+ *    get:
+ *      summary: Login user
+ *      parameters:
+ *        - name: email
+ *          in: path
+ *          required: true
+ *          description: user email address
+ *          schema:
+ *            type: string
+ *        - name: password
+ *          in: path
+ *          required: true
+ *          description: user password
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
 
 app.get('/account/login/:email/:password', function (req, res) {
     console.log('hello ' + req.params.email, req.params.password);
@@ -126,6 +261,60 @@ app.get('/account/login/:email/:password', function (req, res) {
     res.send({"token": '', "error": e,"balance": 0});
    }
 })
+
+/**
+ * @swagger
+ * paths:
+ *   /account/transaction/{email}/{amount}/{transType}/{date}/{balance}:
+ *    get:
+ *      summary: Make user transaction
+ *      parameters:
+ *        - name: email
+ *          in: path
+ *          required: true
+ *          description: user email address
+ *          schema:
+ *            type: string
+ *        - name: amount
+ *          in: path
+ *          required: true
+ *          description: transaction amount
+ *          schema:
+ *            type: string
+ *        - name: transType
+ *          in: path
+ *          required: true
+ *          description: transaction type
+ *          schema:
+ *            type: string
+ *        - name: date
+ *          in: path
+ *          required: true
+ *          description: date of transaction
+ *          schema:
+ *            type: string
+ *        - name: balance
+ *          in: path
+ *          required: true
+ *          description: updated balance
+ *          schema:
+ *            type: string
+ *        - name: Authorization
+ *          in: header
+ *          required: true
+ *          description: 'user token'
+ *          schema:
+ *            type: string
+ *        - name: content-type
+ *          in: header
+ *          required: true
+ *          description: ''
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
 
 //make transaction
 app.get('/account/transaction/:email/:amount/:transType/:date/:balance', function (req, res) {
@@ -164,6 +353,29 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
     });
 });
 
+/**
+ * @swagger
+ * paths:
+ *   /account/logout:
+ *    get:
+ *      summary: Logout user
+ *      parameters:
+ *        - name: Authorization
+ *          in: header
+ *          required: true
+ *          description: 'user token'
+ *          schema:
+ *            type: string
+ *        - name: content-type
+ *          in: header
+ *          required: true
+ *          description: ''
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Success
+ */
 app.get('/account/logout', function (req, res) {
     console.log('logout route');
     console.log('req headers ' + JSON.stringify(req.headers));
