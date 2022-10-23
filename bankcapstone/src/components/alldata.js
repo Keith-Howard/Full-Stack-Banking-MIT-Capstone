@@ -1,3 +1,6 @@
+import React from "react";
+import contextExports from "./context";
+
 function AllData() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState({exists: false, tableData:''});
@@ -30,7 +33,7 @@ function AllData() {
         getAllData();
     }  
     return (
-        <Card
+        <contextExports.CardBootstrap
             backgroundColor="#E99B53"
             header="All Data"
             status=""
@@ -60,3 +63,4 @@ function AllData() {
         />
     )
 }
+export default AllData;

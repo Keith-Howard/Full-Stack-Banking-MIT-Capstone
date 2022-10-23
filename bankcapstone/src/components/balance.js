@@ -1,7 +1,9 @@
+import contextExports from "./context";
+
 function Balance() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     return (
-        <Card
+        <contextExports.CardBootstrap
             backgroundColor="#E99B53"
             header="Balance"
             status=""
@@ -19,3 +21,4 @@ function Balance() {
         />
     )
 }
+export default Balance;

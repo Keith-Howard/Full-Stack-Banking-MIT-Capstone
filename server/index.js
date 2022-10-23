@@ -1,12 +1,12 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
-var dal = require('./dal.js');
+var dal = require('./dal');
 const admin   = require('./admin');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const firebase = require('firebase');
-app.use(express.static('public'));
+app.use(express.static('src/components'));
 app.use(cors());
 
 const swaggerOptions = {
@@ -406,6 +406,6 @@ app.get('/account/logout', function (req, res) {
 
 
 
-var port = 3000;
+var port = 3001;
 app.listen(port);
 console.log(`Running on port ${port}`);

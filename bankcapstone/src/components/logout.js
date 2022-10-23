@@ -1,3 +1,6 @@
+import React from "react";
+import contextExports from "./context";
+
 function Logout() {
     console.log('logout component line 2');
     const loggedInUserString = localStorage.getItem('loggedInUser');
@@ -43,7 +46,7 @@ function Logout() {
         logoutUser();
     }
     return (
-        <Card
+        <contextExports.CardBootstrap
         backgroundColor="#E99B53"
         header="Logout"
         status=''
@@ -56,3 +59,5 @@ function Logout() {
     />
     );
 }
+
+export default Logout;

@@ -1,6 +1,8 @@
+import React from 'react';
+import Card from 'react-bootstrap/Card';
 const UserContext = React.createContext(null);
  
-function Card(props){
+function CardBootstrap(props){
     function classes(){
       const bg  = props.bgcolor ? ' bg-' + props.bgcolor : ' ';
       const txt = props.txtcolor ? ' text-' + props.txtcolor: ' text-white';
@@ -8,19 +10,20 @@ function Card(props){
     }
 
     return (
-      <div className={classes()} style={{width: props.cardWidth, backgroundColor: props.backgroundColor}}>
-        <div className="card-header">{props.header}</div>
-        <div className="card-body">
+      <Card className={classes()} style={{width: props.cardWidth, backgroundColor: props.backgroundColor}}>
+        <Card.Header className="card-header">{props.header}</Card.Header>
+        <Card.Body className="card-body">
           {props.title && (<h5 className="card-title">{props.title}</h5>)}
           {props.text && (<p className="card-text">{props.text}</p>)}
           {props.body}
           {props.status && (<div id='createStatus'>{props.status}</div>)}
-        </div>
-      </div>      
+        </Card.Body>
+      </Card>      
     );    
   }
   
 const contextExports = {
-  Card,
-  UserContext,
+  CardBootstrap,
+  UserContext
 }
+export default contextExports;

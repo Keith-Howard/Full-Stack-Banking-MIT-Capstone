@@ -1,3 +1,4 @@
+/* const firebase = require('firebase-admin');
 
 const firebaseConfig = {
     apiKey: "AIzaSyBABX_sKI35BiJ-rTQMRwnsgI3iOg-gtWk",
@@ -9,10 +10,10 @@ const firebaseConfig = {
     appId: "1:769126759906:web:d73353f0d05ba715368dbb"
 };
 
-firebase.initialize(firebaseConfig);
+firebase.initialize(firebaseConfig); */
 
-function createAccount(name, email, password) {
+/* function createAccount(name, email, password) {
     const auth  = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email,password);
 	promise.catch(e => console.log(e.message));
-}
+} */

@@ -1,3 +1,6 @@
+import React from "react";
+import contextExports from "./context";
+
 function CreateAccount(){
     const [show, setShow]     = React.useState(true);
     const [status, setStatus] = React.useState('');
@@ -6,7 +9,7 @@ function CreateAccount(){
     const [password, setPassword] = React.useState(''); 
   
     return (
-      <Card
+      <contextExports.CardBootstrap
         backgroundColor="#E99B53"
         header="Create Account"
         status={status}
@@ -114,3 +117,4 @@ function CreateAccount(){
   
     </>);
   }
+export default CreateAccount;

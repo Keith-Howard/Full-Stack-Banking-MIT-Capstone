@@ -1,3 +1,6 @@
+import React from 'react';
+import contextExports from './context';
+
 function TransHistory() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState({exists: false, tableData:''});
@@ -40,7 +43,7 @@ function TransHistory() {
     }
 
     return (
-        <Card
+        <contextExports.CardBootstrap
             backgroundColor="#E99B53"
             header="Transaction History"
             status=""
@@ -87,3 +90,4 @@ function TransHistory() {
         />
     )
 }
+export default TransHistory;

@@ -1,9 +1,12 @@
+import React from "react";
+import contextExports from "./context";
+
 function Login() {
     const [show, setShow]     = React.useState(true);
     const [status, setStatus] = React.useState('');
     
     return (
-      <Card
+      <contextExports.CardBootstrap
         backgroundColor="#E99B53"
         header="Login"
         status={status}
@@ -88,3 +91,4 @@ function Login() {
   
     </div>);
 }
+export default Login;

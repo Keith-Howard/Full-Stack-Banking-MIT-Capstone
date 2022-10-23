@@ -1,10 +1,13 @@
+import React from 'react';
+import contextExports from './context';
+
 function Transaction(props) {
     const loggedInUserString = localStorage.getItem('loggedInUser');
     let loggedInUser = JSON.parse(loggedInUserString);
     const [amount, setAmount] = React.useState('');
     const [transMessage, setTransMessage] = React.useState('');
     return (
-        <Card
+        <contextExports.CardBootstrap
         backgroundColor="#E99B53"
         header={props.transType}
         status={transMessage}
@@ -96,3 +99,4 @@ function Transaction(props) {
         }
     }
 }
+export default Transaction;
