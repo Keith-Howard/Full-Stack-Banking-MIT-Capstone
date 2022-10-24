@@ -65,10 +65,13 @@ function CreateAccount(){
         return;
       }
       if (props.password.length >= minValidPasswordLen) {
-        console.log(props.name, props.email, props.password);
+        console.log('create account before route' + props.name, props.email, props.password);
         const url = `/account/create/${props.name}/${props.email}/${props.password}`;
+        console.log('create account url ' + url);
         (async () => {
+          console.log('before fetch');
           var res = await fetch(url);
+          console.log('after fetch');
           var data = await res.json();
           if (data.error !== '') {
             console.log('handle function ' + data.error);
