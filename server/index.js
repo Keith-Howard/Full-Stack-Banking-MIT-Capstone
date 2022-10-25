@@ -6,7 +6,9 @@ const admin   = require('./admin');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const firebase = require('firebase');
-app.use(express.static('src/components'));
+const path = require('path');
+
+app.use(express.static(path.join(__dirname + '/public')));
 app.use(cors());
 
 const swaggerOptions = {
@@ -35,9 +37,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 async function createFirebaseCredentials(email, password) {
+    console.log('create firebase cred');
     const auth  = firebase.auth();
     try {
         await auth.createUserWithEmailAndPassword(email, password);
+        console.log('firebase cred try log');
         return '';
       } 
       catch (e) {
@@ -48,6 +52,7 @@ async function createFirebaseCredentials(email, password) {
 
 async function createMongoUser(name, email, password) {
     try {
+        console.log('beginning create mongo user try');
         await dal.create(name, email, password).
             then((user) => {
                 console.log('dal ' + JSON.stringify(user));
@@ -55,7 +60,7 @@ async function createMongoUser(name, email, password) {
             return '';
     }
     catch (e) {
-        console.log('createMongoUser ' + e.message);
+        console.log('createMongoUser error ' + e.message);
         return e.message;
       }
 }
@@ -99,6 +104,7 @@ app.get('/account/create/:name/:email/:password', async function (req, res) {
         errorMsg = await createMongoUser(req.params.name, req.params.email, req.params.password);
     };
     if (errorMsg === '') {
+        console.log('create account success');
         res.send({"email": req.params.email, "error": ''});
     }else {
         console.log('create user error ' + JSON.stringify({"email": req.params.email, "error":errorMsg}));
@@ -405,7 +411,7 @@ app.get('/account/logout', function (req, res) {
 });
 
 
+const port = process.env.PORT || 3001
 
-var port = 3001;
 app.listen(port);
 console.log(`Running on port ${port}`);

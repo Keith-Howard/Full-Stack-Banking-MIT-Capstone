@@ -1,14 +1,18 @@
 const MongoClient = require('mongodb').MongoClient;
+//const uri = process.env.MONGODB_URI;
+const uri = 'mongodb+srv://keithwh:bankapp88@cluster0.ibappjz.mongodb.net/myproject?retryWrites=true&w=majority';
 const url = 'mongodb://localhost:27017';
 let db = null;
-
-MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
+console.log('Mongo URI = ' + uri);
+MongoClient.connect(uri, {useUnifiedTopology: true}, function(err, client) {
     console.log('Connected successfully to db server');
+    console.log('mongo connect error ' + JSON.stringify(err));
 
     db = client.db('myproject');
 });
 
 function create(name, email, password) {
+    console.log('db inside of create');
     return new Promise((resolve, reject) => {
         const collection = db.collection('users');
         const doc = {name, email, password, balance: 0};

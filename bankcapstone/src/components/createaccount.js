@@ -74,7 +74,7 @@ function CreateAccount(){
           console.log('after fetch');
           var data = await res.json();
           if (data.error !== '') {
-            console.log('handle function ' + data.error);
+            //console.log('handle function ' + data.error);
             props.setShow(true);
             props.setStatus(data.error);
           } else{
