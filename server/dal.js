@@ -1,18 +1,16 @@
 const MongoClient = require('mongodb').MongoClient;
-//const uri = process.env.MONGODB_URI;
-const uri = 'mongodb+srv://keithwh:bankapp88@cluster0.ibappjz.mongodb.net/myproject?retryWrites=true&w=majority';
+// next line is used to test on cloud
+// const url = 'mongodb+srv://keithwh:bankapp88@cluster0.ibappjz.mongodb.net/myproject?retryWrites=true&w=majority';
+// next line is used to test locally
 const url = 'mongodb://localhost:27017';
 let db = null;
-console.log('Mongo URI = ' + uri);
-MongoClient.connect(uri, {useUnifiedTopology: true}, function(err, client) {
+console.log('Mongo URI = ' + url);
+MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     console.log('Connected successfully to db server');
-    console.log('mongo connect error ' + JSON.stringify(err));
-
     db = client.db('myproject');
 });
 
 function create(name, email, password) {
-    console.log('db inside of create');
     return new Promise((resolve, reject) => {
         const collection = db.collection('users');
         const doc = {name, email, password, balance: 0};
@@ -56,9 +54,8 @@ function all(email, password) {
     })
 }
 
-//login route calls this function to retrieve the balance after succesfull authentication
+//login route calls this function to retrieve the balance and name after succesfull authentication
 function balance(email, password) {
-    console.log('input ' + email, password);
     return new Promise((resolve, reject) => {
         const collection = db
             .collection('users')
@@ -71,17 +68,14 @@ function balance(email, password) {
 }
 
 function transaction(email, newBalance){
-    console.log('newBalance datatype of ' + newBalance + ' is ' + typeof(newBalance));
     return new Promise((resolve, reject) => {    
         const customer = db
             .collection('users')         
             .updateOne({"email": email }, {$set : {"balance" : newBalance}})
             .then((result) => {
-                console.log('trans dal then ' + JSON.stringify(result));
                 resolve(result)
             })
             .catch((err) => {
-                console.log('trans dal catch ' + JSON.stringify(err));
                 reject(err)
             });  
     });   

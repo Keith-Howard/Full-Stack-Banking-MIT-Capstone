@@ -6,7 +6,6 @@ function AllData() {
     const [data, setData] = React.useState({exists: false, tableData:''});
 
     async function getAllData() {
-        console.log(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`);
         const response = await fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`,
         { method: 'GET',
             headers: {

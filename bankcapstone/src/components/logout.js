@@ -2,7 +2,7 @@ import React from "react";
 import contextExports from "./context";
 
 function Logout() {
-    console.log('logout component line 2');
+    console.log('logout component render');
     const loggedInUserString = localStorage.getItem('loggedInUser');
     let loggedInUser = JSON.parse(loggedInUserString);
     const [logStatus, setLogStatus] = React.useState({logoutStatus: false, logoutMsg: ''});
@@ -17,7 +17,6 @@ function Logout() {
         });
         const data = await response.json();
         if (data.error === '') {
-            console.log('logoutform if line 40');
             localStorage.setItem('loggedInUser', JSON.stringify({}));
             const deposit = document.getElementById("deposit");
             deposit.style.display = 'none';

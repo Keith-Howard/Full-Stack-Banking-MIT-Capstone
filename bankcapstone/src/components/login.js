@@ -29,7 +29,7 @@ function Login() {
         (async () => {
           var res = await fetch(url);
           var data = await res.json();
-          console.log(data);
+          console.log('LoginForm data ' + data);
           if(data.error === '') {
             const createAccount = document.getElementById("createAccount");
             createAccount.style.display = 'none';

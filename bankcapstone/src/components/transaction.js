@@ -75,7 +75,6 @@ function Transaction(props) {
             let date = `${month}-${day}-${year}`;
             const url = `/account/transaction/${loggedInUser.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
             (async () => {
-                console.log('trans.js async func url ' + url);
                 var res = await fetch(url,
                     { method: 'GET',
                     headers: {
@@ -83,7 +82,7 @@ function Transaction(props) {
                         'Content-Type': 'application/json'
                     }});
                 var data  =  await res.json();
-                console.log('Trans.js data ' + JSON.stringify(data));
+                console.log('Transaction component data ' + JSON.stringify(data));
                 if (data.status === "success") {
                     if (props.transType === 'Deposit') {
                         setTransMessage(`Deposited $${amount}`);

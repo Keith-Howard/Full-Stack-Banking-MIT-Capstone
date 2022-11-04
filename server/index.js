@@ -37,25 +37,23 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 async function createFirebaseCredentials(email, password) {
-    console.log('create firebase cred');
+    console.log('createFirebaseCredentials');
     const auth  = firebase.auth();
     try {
         await auth.createUserWithEmailAndPassword(email, password);
-        console.log('firebase cred try log');
         return '';
       } 
       catch (e) {
-        console.log('createFirebaseCredentials ' + e.message);
+        console.log('createFirebaseCredentials error ' + e.message);
         return e.message;
       }
 }
 
 async function createMongoUser(name, email, password) {
     try {
-        console.log('beginning create mongo user try');
         await dal.create(name, email, password).
             then((user) => {
-                console.log('dal ' + JSON.stringify(user));
+                console.log('createMongoUser success ' + JSON.stringify(user));
             });
             return '';
     }
@@ -96,15 +94,13 @@ async function createMongoUser(name, email, password) {
  */
 
 //create user
-app.get('/account/create/:name/:email/:password', async function (req, res) {
-    console.log('create account index.js ' + req.params.email);      
+app.get('/account/create/:name/:email/:password', async function (req, res) {      
     let errorMsg = await createFirebaseCredentials(req.params.email, req.params.password);
-    console.log('error message ' + errorMsg);
     if (errorMsg === '') {
         errorMsg = await createMongoUser(req.params.name, req.params.email, req.params.password);
     };
     if (errorMsg === '') {
-        console.log('create account success');
+        console.log('create user success');
         res.send({"email": req.params.email, "error": ''});
     }else {
         console.log('create user error ' + JSON.stringify({"email": req.params.email, "error":errorMsg}));
@@ -145,19 +141,19 @@ app.get('/account/create/:name/:email/:password', async function (req, res) {
 app.get('/account/alltransactions/:email', function(req, res) {
     try {
         const idToken = req.headers.authorization;
-        console.log('route token ' + idToken);
+        console.log('allTransactions route token ' + idToken);
         admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
-            console.log('decodedToken:',decodedToken);
+            console.log('allTransactions decodedToken:',decodedToken);
         })
         dal.getAllTransactions(req.params.email).
         then((docs) => {
-            console.log(docs);
+            console.log('allTransactions success ' + docs);
             res.send(docs);
         })
     }
     catch (e) {
-        console.log(e);
+        console.log('allTransactions error ' + e);
         res.send(e.message);
     }
 })
@@ -202,16 +198,16 @@ app.get('/account/alltransactions/:email', function(req, res) {
 app.get('/account/all/:email/:password', function(req,res) {
     try {
         const idToken = req.headers.authorization;
-        console.log('route token ' + idToken);
+        console.log('allData route token ' + idToken);
         admin.auth().verifyIdToken(idToken)
         dal.all(req.params.email, req.params.password).
         then((docs) => {
-            console.log(docs);
+            console.log('allData success ' + docs);
             res.send(docs);
         })
     }
     catch (e) {
-        console.log(e);
+        console.log('allData error ' + e);
         res.send(e.message);
       }
 })
@@ -241,25 +237,22 @@ app.get('/account/all/:email/:password', function(req,res) {
  */
 
 app.get('/account/login/:email/:password', function (req, res) {
-    console.log('hello ' + req.params.email, req.params.password);
    try {
     executeLogin(req.params.email, req.params.password);
     async function executeLogin(email, password) {
         const auth  = firebase.auth();
         await auth.signInWithEmailAndPassword(email, password)
             .then((response) => {
-                console.log('index server side res ' + JSON.stringify(response));
                 response.user.getIdToken().then(token => {
-                    console.log('token ' + JSON.stringify(token));
                     dal.balance(req.params.email, req.params.password).
                         then((docs) => {
-                            console.log(docs);
+                            console.log('server login API success ' + docs);
                             res.send({"token": token, "error": '',"balance": docs});
                         })
                 })
             })
             .catch((e) => {
-                console.log('index login error ' + e);
+                console.log('server login error ' + e);
                 res.send({"token": '', "error": e.message,"balance": ''});
             })
     }
@@ -325,16 +318,15 @@ app.get('/account/login/:email/:password', function (req, res) {
 //make transaction
 app.get('/account/transaction/:email/:amount/:transType/:date/:balance', function (req, res) {
     const idToken = req.headers.authorization;
-    console.log('route token ' + idToken);
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
-            console.log('decodedToken:',decodedToken);
+            console.log('transaction decodedToken:',decodedToken);
         })
         
         dal.transaction(req.params.email, String(req.params.balance))
         .then((result) => {
             if (result.modifiedCount === 1) {
-                console.log(result);
+                console.log('transaction success ' + result);
                 res.send({"status": "success"});
             } else {
                 res.send({"status": "failed"});
@@ -342,19 +334,19 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
             dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
             .then((result) => {
                 if (result.modifiedCount === 1) {
-                    console.log(result);
+                    console.log('enterTransToDB success ' + result);
                     res.send({"status": "success"});
                 } else {
                     res.send({"status": "failed"});
                 }
             })
             .catch((error) => {
-                console.log('error in index ' + error);
+                console.log('enterTransToDB error ' + error);
                 res.send({"status": error});
             });
         })
     .catch((error) => {
-        console.log('error in index ' + error);
+        console.log('transaction error in server ' + error);
         res.send({"status": error});
     });
 });
@@ -384,34 +376,33 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
  */
 app.get('/account/logout', function (req, res) {
     console.log('logout route');
-    console.log('req headers ' + JSON.stringify(req.headers));
     const idToken = req.headers.authorization;
-    console.log('route token ' + idToken);
+    console.log('logout route token ' + idToken);
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
-            console.log('decodedToken:',decodedToken);
+            console.log('logout decodedToken: ',decodedToken);
         })
         const auth  = firebase.auth();
         auth.signOut()
             .then(function() {
                 // Sign-out successful.
-                console.log('good logout');
+                console.log('logout success');
                 res.send({"error": ''});
             })
             .catch(function(error) {
-                console.log('bad logout');
+                console.log('logout error ' + error);
                 // An error happened
                 res.send({"error": error});
             })
     .catch((error) => {
-        console.log('error in index ' + error);
+        console.log('logout error in server ' + error);
         res.send({"status": error});
     });
         
 });
 
-
-const port = process.env.PORT || 3001
+// when process.env.PORT is set by cloud provider that is the port for listening
+const port = process.env.PORT || 3000
 
 app.listen(port);
 console.log(`Running on port ${port}`);

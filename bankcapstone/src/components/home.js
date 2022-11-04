@@ -1,7 +1,7 @@
 import contextExports from "./context";
 
 function Home() {
-    console.log('Home component');
+    console.log('Home component render');
     return (
         <contextExports.CardBootstrap
             backgroundColor="#E99B53"
