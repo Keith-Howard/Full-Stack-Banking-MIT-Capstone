@@ -321,34 +321,35 @@ app.get('/account/transaction/:email/:amount/:transType/:date/:balance', functio
     admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
             console.log('transaction decodedToken:',decodedToken);
-        })
-        
-        dal.transaction(req.params.email, String(req.params.balance))
-        .then((result) => {
-            if (result.modifiedCount === 1) {
-                console.log('transaction success ' + result);
-                res.send({"status": "success"});
-            } else {
-                res.send({"status": "failed"});
-            }
-            dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
+            dal.transaction(req.params.email, String(req.params.balance))
             .then((result) => {
                 if (result.modifiedCount === 1) {
-                    console.log('enterTransToDB success ' + result);
-                    res.send({"status": "success"});
+                    console.log('transaction success ' + result);
+                    dal.enterTransToDb(req.params.email, req.params.date, req.params.transType, String(req.params.amount))
+                        .then((result) => {
+                            if (result._id) {
+                                console.log('enterTransToDB success ' + result);
+                                res.send({"status": "success"});
+                            } else {
+                                res.send({"status": "failed"});
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('enterTransToDB error ' + error);
+                            res.send({"status": error});
+                        });
                 } else {
                     res.send({"status": "failed"});
-                }
-            })
+                }})
             .catch((error) => {
                 console.log('enterTransToDB error ' + error);
                 res.send({"status": error});
             });
         })
-    .catch((error) => {
-        console.log('transaction error in server ' + error);
-        res.send({"status": error});
-    });
+        .catch((error) => {
+            console.log('transaction error in server ' + error);
+            res.send({"status": error});
+        });
 });
 
 /**
