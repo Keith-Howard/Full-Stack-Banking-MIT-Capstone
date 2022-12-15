@@ -5,6 +5,3 @@ Firebase was used to authenticate the user and API calls. Used Mongo DB/Atlas cl
 to persist data between logins. Deployed the app on Heroku. Functional components for accounts, log 
 in/out, transactions, and transaction history. React Context and Local Storage used to cache user data 
 after log in.
-
-# Link to hosted website
-https://keithhowardfullstackbanking.herokuapp.com/
