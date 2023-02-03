@@ -41,7 +41,7 @@ function TransHistory() {
     if (!data.exists) {
         getTransData();
     }
-
+    
     return (
         <contextExports.CardBootstrap
             backgroundColor="#E99B53"
@@ -82,7 +82,7 @@ function TransHistory() {
                             </tr>
                         </thead>
                         <tbody className="table-light">
-                            {window.HTMLReactParser(data.tableData)}
+                        {window.HTMLReactParser(data.tableData)}
                         </tbody>
                     </table>
                 </>

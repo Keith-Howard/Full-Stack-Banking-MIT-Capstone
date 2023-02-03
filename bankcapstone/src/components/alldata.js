@@ -1,11 +1,14 @@
 import React from "react";
 import contextExports from "./context";
+import reactParse from 'html-react-parser';
+
 
 function AllData() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState({exists: false, tableData:''});
 
     async function getAllData() {
+        console.log("alldata " + loggedInUser.userToken);
         const response = await fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`,
         { method: 'GET',
             headers: {
@@ -54,7 +57,7 @@ function AllData() {
                         </thead>
                         {!data.exists ? (<></>):
                         (<tbody className="table-light">
-                            {window.HTMLReactParser(data.tableData)}
+                            {reactParse(data.tableData)}
                         </tbody>)}
                     </table>
                 </>
