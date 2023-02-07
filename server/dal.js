@@ -1,8 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
 // next line is used to test on cloud
-// const url = 'mongodb+srv://keithwh:bankapp88@cluster0.ibappjz.mongodb.net/myproject?retryWrites=true&w=majority';
+const url = 'mongodb+srv://keithwh:bankapp88@cluster0.ibappjz.mongodb.net/myproject?retryWrites=true&w=majority';
 // next line is used to test locally
-const url = 'mongodb://localhost:27017';
+//const url = 'mongodb://localhost:27017';
 let db = null;
 console.log('Mongo URI = ' + url);
 MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
