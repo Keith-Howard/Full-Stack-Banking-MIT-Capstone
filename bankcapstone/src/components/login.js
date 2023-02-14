@@ -10,7 +10,7 @@ function Login() {
         backgroundColor="#E99B53"
         header="Login"
         status={status}
-        cardWidth='25vw'
+        cardWidth='33vw'
         body={show ? 
           <LoginForm setShow={setShow} setStatus={setStatus}/> : 
           <h5>Successfully Logged In</h5>}
@@ -29,7 +29,7 @@ function Login() {
         (async () => {
           var res = await fetch(url);
           var data = await res.json();
-          console.log('LoginForm data ' + data);
+          console.log('LoginForm data ', data.balance);
           if(data.error === '') {
             const createAccount = document.getElementById("createAccount");
             createAccount.style.display = 'none';

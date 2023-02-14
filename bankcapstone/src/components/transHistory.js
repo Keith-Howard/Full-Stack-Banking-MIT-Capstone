@@ -1,5 +1,6 @@
 import React from 'react';
 import contextExports from './context';
+import './transHistory.css';
 
 function TransHistory() {
     const loggedInUser = localStorage.getItem('loggedInUser');
@@ -31,7 +32,7 @@ function TransHistory() {
                 `<tr>
                     <td>${user.date}</td>
                     <td>${user.transType}</td>
-                    <td>${Number(user.amount).toFixed(2)}</td>
+                    <td align="right">${Number(user.amount).toFixed(2)}</td>
                 </tr>`
             }
         };
@@ -70,7 +71,7 @@ function TransHistory() {
                         <button className="dropdown-item" onClick={()=>{
                             setFilter('Withdrawals');
                             setData({exists: false, tableData:''});
-                            }} type="button">Withdrawels</button>
+                            }} type="button">Withdrawals</button>
                     </div>
                 </div>
                     <table className='table'>

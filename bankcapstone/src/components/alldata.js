@@ -1,11 +1,10 @@
 import React from "react";
 import contextExports from "./context";
-import reactParse from 'html-react-parser';
 
 
 function AllData() {
     const loggedInUser = localStorage.getItem('loggedInUser');
-    const [data, setData] = React.useState({exists: false, tableData:''});
+    const [data, setData] = React.useState({exists: false, tableData: {}});
 
     async function getAllData() {
         console.log("alldata " + loggedInUser.userToken);
@@ -17,23 +16,15 @@ function AllData() {
             }
         });
         const allData = await response.json();
-        let dataString = '';
-        if (allData !== '') {
-            for (const user of allData) {
-                dataString = dataString + 
-                `<tr>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.password}</td>
-                    <td>${user.balance}</td>
-                </tr>`
-            }
-        };
-        setData({exists:true, tableData: dataString});
+        return allData;
     }
-    if (!data.exists) {
-        getAllData();
-    }  
+
+    getAllData().then(user => {
+        if (user.length > 0) {
+            setData({exists:true, tableData: {name: user[0].name, email: user[0].email, password: user[0].password, balance: user[0].balance}});
+        }
+    })
+    
     return (
         <contextExports.CardBootstrap
             backgroundColor="#E99B53"
@@ -47,17 +38,20 @@ function AllData() {
             ):(
                 <>
                     <table className='table'>
-                        <thead className="thead-light">
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Password</th>
-                                <th scope="col">Balance</th>
-                            </tr>
-                        </thead>
                         {!data.exists ? (<></>):
                         (<tbody className="table-light">
-                            {reactParse(data.tableData)}
+                        <tr>
+                            <td scope="col">Name</td><td>{data.tableData.name}</td>
+                        </tr>
+                        <tr>
+                            <td scope="col">Email</td><td>{data.tableData.email}</td>
+                        </tr>
+                        <tr>
+                            <td scope="col">Password</td><td>{data.tableData.password}</td>
+                        </tr>
+                        <tr>
+                            <td scope="col">Balance</td><td>{data.tableData.balance}</td>
+                        </tr>
                         </tbody>)}
                     </table>
                 </>

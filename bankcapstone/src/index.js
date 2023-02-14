@@ -1,6 +1,7 @@
 import contextExports from './components/context.js';
 import {Routes, Route, HashRouter} from 'react-router-dom';
 import ReactDOM from 'react-dom';
+//import './index.css';
 import Home from './components/home.js';
 import Logout from './components/logout.js';
 import Login from './components/login.js';
