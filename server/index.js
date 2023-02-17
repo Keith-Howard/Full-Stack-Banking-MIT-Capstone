@@ -249,6 +249,10 @@ app.get('/account/login/:email/:password', function (req, res) {
                             console.log('server login API success ' + docs);
                             res.send({"token": token, "error": '',"balance": docs});
                         })
+                        .catch((err) => {
+                            console.log("catch login from mongo");
+                            console.log(err);
+                        })
                 })
             })
             .catch((e) => {
