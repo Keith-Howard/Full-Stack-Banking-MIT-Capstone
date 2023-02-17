@@ -3,15 +3,13 @@ import contextExports from "./context";
 
 
 function AllData() {
-    const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState({exists: false, tableData: {}});
 
     async function getAllData() {
-        console.log("alldata " + loggedInUser.userToken);
-        const response = await fetch(`/account/all/${JSON.parse(loggedInUser).email}/${JSON.parse(loggedInUser).password}`,
+        const response = await fetch(`/account/all/${contextExports.UserContext.email}/${contextExports.UserContext.password}`,
         { method: 'GET',
             headers: {
-                'Authorization': loggedInUser.userToken,
+                'Authorization': contextExports.UserContext.userToken,
                 'Content-Type': 'application/json'
             }
         });
@@ -31,7 +29,7 @@ function AllData() {
             header="All Data"
             status=""
             cardWidth='50rem'
-            body={JSON.parse(loggedInUser).email === '' ? (
+            body={contextExports.UserContext.email === '' ? (
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
                 </>

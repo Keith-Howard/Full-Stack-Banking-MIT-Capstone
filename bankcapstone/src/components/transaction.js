@@ -2,8 +2,6 @@ import React from 'react';
 import contextExports from './context';
 
 function Transaction(props) {
-    const loggedInUserString = localStorage.getItem('loggedInUser');
-    let loggedInUser = JSON.parse(loggedInUserString);
     const [amount, setAmount] = React.useState('');
     const [transMessage, setTransMessage] = React.useState('');
     return (
@@ -12,7 +10,7 @@ function Transaction(props) {
         header={props.transType}
         status={transMessage}
         cardWidth='25vw'
-        body={loggedInUser.email === '' ? ( 
+        body={contextExports.UserContext.email === '' ? ( 
         <>
             <h2>LOGIN TO USE FEATURE</h2>
         </>
@@ -33,7 +31,7 @@ function Transaction(props) {
     )
 
     function handle() {
-        let intLoggedInBalance = Number(loggedInUser.balance);
+        let intLoggedInBalance = Number(contextExports.UserContext.balance);
         let updateDb = true;
         if (isNaN(amount) || Number(amount) < .01) {
             setTransMessage('Enter Number Greater or Equal to .01');
@@ -73,12 +71,12 @@ function Transaction(props) {
             let day = d.getDate();
             let year = d.getFullYear();
             let date = `${month}-${day}-${year}`;
-            const url = `/account/transaction/${loggedInUser.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
+            const url = `/account/transaction/${contextExports.UserContext.email}/${String(amount)}/${props.transType}/${date}/${String(newBalance)}`;
             (async () => {
                 var res = await fetch(url,
                     { method: 'GET',
                     headers: {
-                        'Authorization': loggedInUser.userToken,
+                        'Authorization': contextExports.UserContext.userToken,
                         'Content-Type': 'application/json'
                     }});
                 var data  =  await res.json();
@@ -89,8 +87,7 @@ function Transaction(props) {
                     } else {
                         setTransMessage(`Withdrew $${amount}`);
                     }
-                    loggedInUser.balance = newBalance;
-                    localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                    contextExports.UserContext.balance = newBalance;
                 } else {
                     setTransMessage(data.status);
                 }

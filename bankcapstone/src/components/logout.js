@@ -3,21 +3,23 @@ import contextExports from "./context";
 
 function Logout() {
     console.log('logout component render');
-    const loggedInUserString = localStorage.getItem('loggedInUser');
-    let loggedInUser = JSON.parse(loggedInUserString);
     const [logStatus, setLogStatus] = React.useState({logoutStatus: false, logoutMsg: ''});
     
     async function logoutUser() {
         const response = await fetch('/account/logout',
         { method: 'GET',
         headers: {
-            'Authorization': loggedInUser.userToken,
+            'Authorization': contextExports.UserContext.userToken,
             'Content-Type': 'application/json'
         }
         });
         const data = await response.json();
         if (data.error === '') {
-            localStorage.setItem('loggedInUser', JSON.stringify({}));
+            contextExports.UserContext.name = '';
+            contextExports.UserContext.email = '';
+            contextExports.UserContext.password = '';
+            contextExports.UserContext.balance = 0;
+            contextExports.UserContext.userToken = '';
             const deposit = document.getElementById("deposit");
             deposit.style.display = 'none';
             const withdraw = document.getElementById("withdraw");

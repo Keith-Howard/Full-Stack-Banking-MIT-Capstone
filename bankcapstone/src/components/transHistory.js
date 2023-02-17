@@ -3,16 +3,15 @@ import contextExports from './context';
 import './transHistory.css';
 
 function TransHistory() {
-    const loggedInUser = localStorage.getItem('loggedInUser');
     const [data, setData] = React.useState({exists: false, tableData:''});
     const [filter, setFilter] = React.useState('Filter')
 
 
     async function getTransData(){
-        const response = await fetch(`/account/alltransactions/${JSON.parse(loggedInUser).email}`,
+        const response = await fetch(`/account/alltransactions/${contextExports.UserContext.email}`,
         { method: 'GET',
             headers: {
-                'Authorization': loggedInUser.userToken,
+                'Authorization': contextExports.UserContext.userToken,
                 'Content-Type': 'application/json'
             }
         });
@@ -49,7 +48,7 @@ function TransHistory() {
             header="Transaction History"
             status=""
             cardWidth='50rem'
-            body={JSON.parse(loggedInUser).email === '' ? (
+            body={contextExports.UserContext.email === '' ? (
                 <>
                     <h2>LOGIN TO USE FEATURE</h2>
                 </>

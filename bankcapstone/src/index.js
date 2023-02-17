@@ -15,7 +15,7 @@ import Withdraw from './components/withdraw.js'
 
 function Spa() {
   return (
-    <contextExports.UserContext.Provider value={{users:[{name:'a',email:'b',password:'c',balance:100}]}}>
+    <contextExports.UserContext.Provider value={{name:'',email:'',password:'',balance:0, userToken:''}}>
     <HashRouter>
       <div>
       <NavBar/>        

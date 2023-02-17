@@ -21,14 +21,15 @@ function Login() {
   function LoginForm(props){
     const [email, setEmail]       = React.useState('');
     const [password, setPassword] = React.useState(''); 
-    const loggedInUser = {};
 
     function handle(){
       const url = `/account/login/${email}/${password}`;
+      console.log('url ' + url);
       if (email !== '' && password !== '') {
         (async () => {
           var res = await fetch(url);
           var data = await res.json();
+          console.log("data " + JSON.stringify(data));
           console.log('LoginForm data ', data.balance);
           if(data.error === '') {
             const createAccount = document.getElementById("createAccount");
@@ -49,13 +50,12 @@ function Login() {
             logout.style.display ='inline';
             const userName = document.getElementById("userName");
             userName.style.display ='inline'; 
-            loggedInUser.name = data.balance[0].name;
-            userName.innerHTML = "Welcome " + loggedInUser.name;
-            loggedInUser.email = email;
-            loggedInUser.password = password;
-            loggedInUser.balance = Number(data.balance[0].balance);
-            loggedInUser.userToken = data.token;
-            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+            contextExports.UserContext.name = data.balance[0].name;
+            userName.innerHTML = "Welcome " + contextExports.UserContext.name;
+            contextExports.UserContext.email = email;
+            contextExports.UserContext.password = password;
+            contextExports.UserContext.balance = Number(data.balance[0].balance);
+            contextExports.UserContext.userToken = data.token;
             props.setStatus('');
             props.setShow(false);
           }else{
